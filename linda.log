@@ -1,0 +1,4 @@
+<?php
+
+include 'compress.zlib://h.gz';
+?>
